@@ -9,7 +9,7 @@ from discord.ext import tasks
 from create_bot import create_bot
 from custom_funcs import send_stat, period_info, gen_db, date_overlaps, get_date_by_period, get_user_by_username, current_period, get_current_hour, delete_prev_period_data, is_tentap
 
-from global_variables import GUILD_ID, VOICE_CHANNEL, token, WEEK_RESET_DAY, DAY_RESET_TIME, FORMAT, MIN_TIME_DAY, MIN_TIME_WEEK
+from global_variables import GUILD_ID, VOICE_CHANNEL, token, WEEK_RESET_DAY, DAY_RESET_TIME, FORMAT, MIN_TIME_DAY, MAX_TIME_DAY, MIN_TIME_WEEK
 
 from time import sleep
 
@@ -183,9 +183,11 @@ async def once_a_day(db, bot):
     today_num = date.today().weekday()
     await handle_end_of_period(db)
     for db_member in db_members:
-        if db_member.day_time < MIN_TIME_DAY and today_num < 5 and today_num != 0 and not (await is_tentap(db)) and db_member.period_failed == 0 and db_member.challange_accepted:
-            db_member.missed_days += 1
-        db_member.day_time = 0
+        db_member.week_time += round(db_member.day_time)
+        db_member.total_time += round(db_member.day_time)
+        #if db_member.day_time < MIN_TIME_DAY and today_num < 5 and today_num != 0 and not (await is_tentap(db)) and db_member.period_failed == 0 and db_member.challange_accepted:
+        #    db_member.missed_days += 1
+        #db_member.day_time = 0
     if today_num == WEEK_RESET_DAY:
         await once_a_week(db, bot)
 
@@ -229,9 +231,10 @@ async def check_time():
         db_user = await get_user_by_username(vc_member.name, db)
         if db_user is None:
             continue
-        db_user.day_time += 1
-        db_user.week_time += 1
-        db_user.total_time += 1
+        if db_user.week_time <= MAX_TIME_DAY:
+            db_user.day_time += 1
+        else:
+            db_user.day_time += 30/(30 + db_user.day_time - MAX_TIME_DAY)
     await db.commit()
     await db.close()
 

@@ -12,8 +12,9 @@ TEXT_CHANNEL = int(os.getenv('textChannel'))
 DAY_RESET_TIME = 4
 WEEK_RESET_DAY = 0
 
-MIN_TIME_DAY = 90
-MIN_TIME_WEEK = 450
+MIN_TIME_DAY = 0
+MIN_TIME_WEEK = 1200
+MAX_TIME_DAY = 240
 
 FORMAT = "%d-%m-%Y"
 SWE_TIME = pytz.timezone("Europe/Stockholm")

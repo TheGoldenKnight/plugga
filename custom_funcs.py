@@ -120,7 +120,7 @@ async def period_info(db) -> str:
     else:
         np = await next_period(db)
         if np is False:
-            message = "**No registered periods for the moment, please stand by (maybe relax) until next period!**"
+            message = "**No registered periods for the moment, please stand by (maybe relax) until next period!**\n"
     return message
 
 

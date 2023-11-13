@@ -12,11 +12,12 @@ class User(Base):
     username: Mapped[str] = mapped_column(unique=True)
     total_time: Mapped[int]
     week_time: Mapped[int]
-    day_time: Mapped[int]
+    day_time: Mapped[float]
     missed_days: Mapped[int]
     challange_accepted: Mapped[bool]
     period_failed: Mapped[int]
     deleted: Mapped[bool]
+    day_overtime: Mapped[int]
 
 
 class Date(Base):
